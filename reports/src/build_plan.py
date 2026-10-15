@@ -1,5 +1,5 @@
 import json, math
-BASE = 'base2.pptx'
+BASE = 'base3.pptx'
 exec(open('helpers.py').read())
 
 SPOT_DIR = '/home/user/GitHub/spot-selection'
@@ -51,9 +51,9 @@ text(s, L, 4_950_000, 11_200_000, 900_000,
 s = slides[1]
 set_title(s, 'Table of contents')
 toc = ['Experiment at a glance', 'Checkpoint list (16 spots)', 'Spot details', 'Points and stamp rally',
-       'Participant instructions', 'Schedule', 'Participants', 'Budget', 'Items to confirm']
+       'Participant instructions', 'Schedule', 'Participants', 'Questionnaires', 'Budget', 'Items to confirm']
 for i, t_ in enumerate(toc):
-    y = T + 60_000 + i * 600_000
+    y = T + 20_000 + i * 548_000
     box(s, L, y, 520_000, 520_000, fill=TEAL if i % 2 == 0 else NAVY, shape=MSO_SHAPE.OVAL, name=f'TOC number {i+1}')
     text(s, L, y, 520_000, 520_000, [{'t': str(i + 1), 'size': 18, 'bold': True, 'color': NAVY if i % 2 == 0 else WHITE,
                                       'align': PP_ALIGN.CENTER, 'space': 0}], anchor=MSO_ANCHOR.MIDDLE)
@@ -113,7 +113,7 @@ for k, (a, b) in enumerate([(0, 8), (8, 16)]):
     table(s, L, T, W, [hdr] + body[a:b], [0.04, 0.22, 0.17, 0.13, 0.15, 0.1, 0.08, 0.11], size=14, row_h=560_000,
           highlight=lambda row: row[4] == 'Popular')
     text(s, L, T + 9 * 560_000 + 150_000, W, 400_000,
-         [{'t': 'Orange = popular. Reviews and ratings: Google Maps, 13 Oct 2026. "From start" = straight-line distance from the Asakusa Culture Tourist Information Center.', 'size': 12, 'color': MUTED}])
+         [{'t': 'Orange = popular. Only Sensō-ji is already in the app (ID 1041). Reviews and ratings: Google Maps, 13 Oct 2026. "From start" = straight-line distance from the Asakusa Culture Tourist Information Center.', 'size': 12, 'color': MUTED}])
 
 # ---------- 7–10. Spot details ----------
 cw2, ch2 = (W - 300_000) // 2, 2_420_000
@@ -144,7 +144,7 @@ set_title(s, 'Points design (gamification group only)')
 prow = [['Action', 'Points', 'Where', 'Notes'],
         ['Check-in at a checkpoint', '10', 'All 16 checkpoints', 'Within 200 m; once per spot (app default)'],
         ['Photo mission', '20', 'All 16 checkpoints', 'Photo of a set feature, e.g. the gate or main hall'],
-        ['Stamp', '1 stamp', 'All 16 checkpoints', 'Given with each check-in; fills the rally card'],
+        ['Stamp', '1 stamp', 'All 16 checkpoints', 'Stamp button on the spot page, within 200 m (built into the app)'],
         ['Stamp rally bonus', '30–150', 'Rally goals', 'See next slide'],
         ['App sign-up bonus', '100', 'Registration', 'Existing app feature; same for everyone']]
 table(s, L, T, W, prow, [0.25, 0.12, 0.22, 0.41], size=15, row_h=600_000)
@@ -176,7 +176,7 @@ text(s, L + 260_000, T + 2_430_000, colw - 520_000, 2_900_000,
      [{'t': 'Rewards are in-app only', 'size': 18, 'bold': True, 'color': NAVY},
       {'t': 'Bonus points, medals (Star at 500 points) and a completion badge', 'size': 15, 'bullet': True},
       {'t': 'No money, gifts or prizes for points, stamps or ranking', 'size': 15, 'bullet': True},
-      {'t': 'Medal levels already exist in the app: Star 500, Professional 1,000', 'size': 15, 'bullet': True}])
+      {'t': 'Stamp rally and medals are already built into the app; only server settings are needed', 'size': 15, 'bullet': True}])
 box(s, L + colw + 350_000, T + 2_250_000, colw, 3_200_000, fill=WHITE, line=TEAL, name='Why card')
 text(s, L + colw + 610_000, T + 2_430_000, colw - 520_000, 2_900_000,
      [{'t': 'Why no material prize', 'size': 18, 'bold': True, 'color': NAVY},
@@ -304,8 +304,61 @@ text(s, L + colw + 350_000, T + 1_900_000, colw, 3_500_000,
       {'t': '20 per group detects a large effect (d ≈ 0.9) at α = 0.05, power = 0.80', 'size': 15, 'bullet': True},
       {'t': 'Results are presented as exploratory', 'size': 15, 'bullet': True}])
 
+# ---------- Questionnaires ----------
+def q_slide(s, title, intro, left_title, left, right_title, right, right_fill=WHITE):
+    set_title(s, title)
+    text(s, L, T, W, 450_000, [{'t': intro, 'size': 15, 'color': MUTED, 'space': 0}])
+    cwq = (W - 350_000) // 2
+    box(s, L, T + 550_000, cwq, 4_900_000, name='Questionnaire left')
+    text(s, L + 260_000, T + 720_000, cwq - 520_000, 4_600_000,
+         [{'t': left_title, 'size': 18, 'bold': True, 'color': NAVY, 'space': 8}] +
+         [{'t': x, 'size': 16, 'bullet': True, 'space': 7} for x in left])
+    box(s, L + cwq + 350_000, T + 550_000, cwq, 4_900_000, fill=right_fill, line=TEAL if right_fill == WHITE else None, name='Questionnaire right')
+    text(s, L + cwq + 610_000, T + 720_000, cwq - 520_000, 4_600_000,
+         [{'t': right_title, 'size': 18, 'bold': True, 'color': NAVY, 'space': 8}] +
+         [{'t': x, 'size': 16, 'bullet': True, 'space': 7} for x in right])
+
+q_slide(slides[18], 'Pre-questionnaire (before the walk, 10 min)',
+        'Online form (Google Forms) in Japanese and English, separate from the app. Linked to app logs by participant ID.',
+        'A. About you',
+        ['Participant ID (filled in by staff)',
+         'Age group: 18–19 / 20s / 30s / 40s / 50+',
+         'Gender: male / female / other / prefer not to say',
+         'Nationality; country or region of residence',
+         'International participants: years living in Japan',
+         'Smartphone: iOS / Android'],
+        'B. Travel background',
+        ['Visits to Asakusa before today: 0 / 1 / 2–4 / 5+',
+         'For each of the 16 checkpoints: not known / known but not visited / visited',
+         'Travel motivation: sightseeing / game / reward (Kawanaka et al.)',
+         'Travel style, 1–5: "I prefer famous spots" ↔ "I prefer hidden spots"',
+         '"I avoid crowded tourist spots" (1–5)',
+         'Use of location-based games (e.g. Pokémon GO): never / sometimes / often',
+         'Use of travel apps when sightseeing: never / sometimes / often'])
+
+q_slide(slides[19], 'Post-questionnaire (after the walk, 10–15 min)',
+        'Scales: 1 = strongly disagree … 5 = strongly agree. Places visited are also measured from GPS; the self-report is a cross-check.',
+        'C. Both groups',
+        ['Overall, I was satisfied with today\'s sightseeing',
+         'I enjoyed walking around Asakusa today',
+         'I visited places I would not have visited otherwise',
+         'The places I visited felt crowded',
+         'I would like to visit Asakusa again',
+         'I would recommend the less-known places I visited',
+         'The app was easy to use',
+         'Which of the 16 checkpoints did you visit? (checklist)',
+         'Why did you choose those places? (map information / on my way / looked interesting / game / other)',
+         'Free comment'],
+        'D. Gamification group only',
+        ['Priority, 1–5: "I focused on sightseeing" ↔ "I focused on the game" (Kawanaka et al.)',
+         'Each feature affected where I went: points / photo missions / stamp rally / ranking / medals (1–5 each)',
+         'The game made the trip more enjoyable',
+         'The game made me feel rushed',
+         'I would use these game features on a future trip'],
+        right_fill=TINT)
+
 # ---------- 19. Budget ----------
-s = slides[18]
+s = slides[20]
 set_title(s, 'Budget estimate')
 items = [('Participation fee (¥3,000 gift card)', 3000, 44, 'Main 40 + pilot 4'),
          ('Transport allowance (up to ¥1,000)', 1000, 44, 'Round trip to Asakusa'),
@@ -330,7 +383,7 @@ text(s, L, T + 11 * 470_000 + 150_000, W, 400_000,
 BUDGET_TOTAL = int(sub + cont)
 
 # ---------- 20. Items to confirm ----------
-s = slides[19]
+s = slides[21]
 set_title(s, 'Items to confirm')
 box(s, L, T, colw, 5_450_000, name='Confirm card')
 text(s, L + 280_000, T + 230_000, colw - 560_000, 5_000_000,
@@ -344,7 +397,8 @@ box(s, L + colw + 350_000, T, colw, 5_450_000, fill=NAVY, name='Dependencies car
 text(s, L + colw + 630_000, T + 230_000, colw - 560_000, 5_000_000,
      [{'t': 'Depends on Le Laboratory', 'size': 20, 'bold': True, 'color': TEAL},
       {'t': 'Control-group version of the app (no points, missions, ranking or medals)', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
-      {'t': '16 checkpoints, photo missions and the stamp rally on the server', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
+      {'t': '15 new spots, photo missions and the stamp rally on the server; missions on the 16 checkpoints only', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
+      {'t': 'Hide other app spots (Skytree, Hanayashiki, etc.) during the experiment, if possible', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
       {'t': 'Ranking limited to participants of the same session', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
       {'t': 'Participant ID at registration', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10},
       {'t': 'Raw GPS log export for analysis', 'size': 18, 'color': WHITE, 'bullet': True, 'space': 10}])
