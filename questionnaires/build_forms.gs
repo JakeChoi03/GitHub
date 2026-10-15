@@ -36,8 +36,7 @@ function buildPre() {
   f.setDescription('Thank you for joining this study on a sightseeing app. This survey takes about 10 minutes. ' +
                    'Your answers are anonymous and used only for research.');
   f.addSectionHeaderItem().setTitle('Section 1: About you');
-  f.addTextItem().setTitle('Participant ID (given by staff)').setRequired(true);
-  mc(f, 'Age group', ['18–19', '20–29', '30–39', '40–49', '50 or older']);
+  f.addTextItem().setTitle('User ID (shown in the app)').setRequired(true);
   mc(f, 'Gender', ['Male', 'Female', 'Other', 'Prefer not to say']);
   f.addTextItem().setTitle('Nationality').setRequired(true);
   mc(f, 'Which region are you from?', ['East Asia', 'Southeast Asia', 'South Asia', 'Europe', 'North America',
@@ -63,7 +62,7 @@ function buildPost() {
   var f = FormApp.create('Asakusa Sightseeing Study - Post-questionnaire');
   f.setDescription('Thank you for walking today. This survey takes about 10–15 minutes.');
   f.addSectionHeaderItem().setTitle('Section 1: Everyone');
-  f.addTextItem().setTitle('Participant ID').setRequired(true);
+  f.addTextItem().setTitle('User ID (shown in the app)').setRequired(true);
   grid(f, 'How much do you agree?', [
     "I was satisfied with today's sightseeing",
     'I enjoyed walking around Asakusa today',
